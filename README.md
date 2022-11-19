@@ -4,7 +4,7 @@ Scheduler package, inspired by Laravel scheduler.
 
 ## Requirements
 
-- PHP 8.1 or higher.
+- PHP 8.0 or higher.
 
 ## Installation
 
@@ -35,13 +35,17 @@ MutexFactoryInterface::class => [
 ],
 ```
 
-## General usage
+## General usage 
+
+Configure the command list in your project's params.php file
 
 ```php
-Schedule::class => [
-    'class' => Schedule::class,
-    '__construct()' => [
-        'configurator' => Reference::to(Configurator::class),
+
+return [
+    
+    // ...
+    
+    'mnobody/yii-scheduler' => [
         'config' => [
             [
                 'command' => 'hello',
@@ -66,7 +70,7 @@ Schedule::class => [
         ],
         'timezone' => null, // 'UTC', 'Europe/Warsaw'
     ],
-]
+];
 ```
 
 ### CRON Configuration
