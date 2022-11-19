@@ -7,6 +7,7 @@ namespace Mnobody\Scheduler\Task;
 use Mnobody\Scheduler\Schedule;
 use Mnobody\Scheduler\Expression\Parser;
 use Mnobody\Scheduler\ValueObject\Command;
+use Mnobody\Scheduler\Expression\Expression;
 use Mnobody\Scheduler\Exception\SchedulerConfigException;
 
 final class Configurator
@@ -14,10 +15,12 @@ final class Configurator
     private const PATTERN = '/((.*?) ){4}/';
 
     private Parser $parser;
+    private Expression $expression;
 
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser, Expression $expression)
     {
         $this->parser = $parser;
+        $this->expression = $expression;
     }
 
     public function configure(array $config, Schedule $schedule): void
@@ -45,7 +48,11 @@ final class Configurator
 
     private function parse(string $schedule): string
     {
-        return $this->parser->parse($schedule)->expression();
+        return $this
+            ->parser
+            ->setExpression(clone $this->expression) // keep initial value of cron expression
+            ->parse($schedule)
+            ->expression();
     }
 
     private function isRegularCronExpression(string $schedule): bool
