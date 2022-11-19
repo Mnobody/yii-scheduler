@@ -17,8 +17,8 @@ return [
         '__construct()' => [
             'configurator' => Reference::to(Configurator::class),
             'expressionHandler' => Reference::to(ExpressionHandler::class),
-            'config' => $params['mnobody/yii-schedule']['config'],
-            'timezone' => $params['mnobody/yii-schedule']['timezone'],
+            'config' => $params['mnobody/yii-scheduler']['config'],
+            'timezone' => $params['mnobody/yii-scheduler']['timezone'],
         ],
     ],
 ];
