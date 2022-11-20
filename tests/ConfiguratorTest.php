@@ -18,7 +18,7 @@ final class ConfiguratorTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->configurator = new Configurator(new Parser, new Expression);
+        $this->configurator = new Configurator(new Parser(new Expression));
 
         $this->expressionHandler = new ExpressionHandler();
     }

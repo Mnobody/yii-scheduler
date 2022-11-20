@@ -14,8 +14,7 @@ final class ParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testCorrectParsing(string $expected, string $input): void
     {
-        $result = (new Parser)
-            ->setExpression(new Expression)
+        $result = (new Parser(new Expression))
             ->parse($input)
             ->expression();
 
