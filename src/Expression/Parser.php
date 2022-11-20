@@ -13,15 +13,15 @@ final class Parser
 {
     private Expression $expression;
 
-    public function setExpression(Expression $expression): self
+    public function __construct(Expression $expression)
     {
         $this->expression = $expression;
-
-        return $this;
     }
 
     public function parse(string $schedule): Expression
     {
+        $this->expression->reset(); // keep initial value of cron expression
+
         $methods = explode(';', $schedule);
 
         foreach ($methods as $methodString) {

@@ -14,14 +14,28 @@ final class Expression
     private const FRIDAY = 5;
     private const SATURDAY = 6;
 
+    private const INITIAL_EXPRESSION = '* * * * *';
+
     /**
      * The cron expression representing the command's frequency.
      */
     private string $expression;
 
-    public function __construct(string $expression = '* * * * *')
+    public function __construct()
     {
-        $this->expression = $expression;
+        $this->init();
+    }
+
+    private function init(): void
+    {
+        $this->expression = self::INITIAL_EXPRESSION;
+    }
+
+    public function reset(): self
+    {
+        $this->init();
+
+        return $this;
     }
 
     public function expression(): string
