@@ -92,47 +92,26 @@ Fields _schedule_ is __required__
 
 You can provide regular CRON expression, or human-readable expression \
 Possible _schedule_ human-readable expressions:
-- every-minute
-- every-two-minutes
-- every-three-minutes
-- every-four-minutes
-- every-five-minutes
-- every-ten-minutes
-- every-fifteen-minutes
-- every-thirty-minutes
-- hourly
-- hourly-at:13
-- every-two-hours
-- every-three-hours
-- every-four-hours
-- every-six-hours
-- daily
-- daily-at:13:00
-- twice-daily:1,13
-- weekdays
-- weekends
-- mondays
-- tuesdays
-- wednesdays
-- thursdays
-- fridays
-- saturdays
-- sundays
-- weekly
-- weekly-on:1,8:00
-- monthly
-- monthly-on:4,15:00
-- twice-monthly:1,16,13:00
-- last-day-of-month:14:00
-- quarterly
-- yearly
-- yearly-on:6,1,17:00
-- days:1,4,6
+
+|                     |                    |                           |                          |
+|---------------------|--------------------|---------------------------|--------------------------|
+| every-minute        | every-two-minutes  | every-three-minutes       | every-four-minutes       |
+| every-five-minutes  | every-ten-minutes  | every-fifteen-minutes     | every-thirty-minutes     |
+| hourly              | hourly-at:13       | every-two-hours           | every-three-hours        |
+| every-four-hours    | every-six-hours    | daily                     | daily-at:13:00           |
+| twice-daily:1,13    | weekdays           | weekends                  | mondays                  |
+| tuesdays            | wednesdays         | thursdays                 | fridays                  |
+| saturdays           | sundays            | weekly                    | weekly-on:1,8:00         |
+| monthly             | monthly-on:4,15:00 | twice-monthly:1,16,13:00  | last-day-of-month:14:00  |
+| quarterly           | yearly             | yearly-on:6,1,17:00       | days:1,4,6               |
+|                     |                    |                           |                          |
 
 Also _schedule_ expressions can be combined:
-- daily-at:12:15;weekends
-- hourly;wednesdays
-- hourly-at:45;days:1,3,5
+
+|                         |                   |                         |
+|-------------------------|-------------------|-------------------------|
+| daily-at:12:15;weekends | hourly;wednesdays | hourly-at:45;days:1,3,5 |
+|                         |                   |                         |
 
 ### Overlapping
 To prevent overlapping provide _withoutOverlappingTimeout_ param with a number of seconds that specifies the lock lifetime \
