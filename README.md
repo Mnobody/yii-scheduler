@@ -101,15 +101,15 @@ return [
 You can disable logging by injecting a NullLogger instance instead of the default logger
 ```php
 Scheduler::class => [
-        'class' => Scheduler::class,
-        '__construct()' => [
-            'schedule' => Reference::to(Schedule::class),
-            'locker' => Reference::to(Locker::class),
-            'executor' => Reference::to(CommandExecutor::class),
-            'dispatcher' => Reference::to(EventDispatcherInterface::class),
-            'logger' => Reference::to(\Psr\Log\NullLogger::class), // if you want to disable logging
-        ],
+    'class' => Scheduler::class,
+    '__construct()' => [
+        'schedule' => Reference::to(Schedule::class),
+        'locker' => Reference::to(Locker::class),
+        'executor' => Reference::to(CommandExecutor::class),
+        'dispatcher' => Reference::to(EventDispatcherInterface::class),
+        'logger' => Reference::to(\Psr\Log\NullLogger::class), // if you want to disable logging
     ],
+],
 ```
 
 ### Mutex
@@ -156,7 +156,7 @@ Possible _schedule_ human-readable expressions:
 | monthly             | monthly-on:4,15:00 | twice-monthly:1,16,13:00  | last-day-of-month:14:00  |
 | quarterly           | yearly             | yearly-on:6,1,17:00       | days:1,4,6               |
 
-Also _schedule_ expressions can be combined:
+Also _schedule_ expressions can be combined, for example:
 
 |                         |                   |                         |
 |-------------------------|-------------------|-------------------------|
