@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace Mnobody\Scheduler\Command;
 
 use Throwable;
+use Psr\Log\LoggerInterface;
 use Mnobody\Scheduler\Schedule;
 use Mnobody\Scheduler\Task\Task;
-use Mnobody\Scheduler\Mutex\Locker;
 use Yiisoft\Yii\Console\ExitCode;
+use Mnobody\Scheduler\Mutex\Locker;
 use Mnobody\Scheduler\Execute\CommandExecutor;
-use Mnobody\Scheduler\Event\ScheduledTaskFailedEvent;
-use Mnobody\Scheduler\Event\ScheduledTaskSkippedEvent;
-use Mnobody\Scheduler\Event\ScheduledTaskStartedEvent;
 use Symfony\Component\Console\Command\Command;
-use Mnobody\Scheduler\Event\ScheduledTaskCompletedEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Yiisoft\Mutex\Exception\MutexLockedException;
 use Symfony\Component\Console\Input\InputInterface;
+use Yiisoft\Yii\Console\Output\ConsoleBufferedOutput;
+use Mnobody\Scheduler\Event\ScheduledTaskFailedEvent;
 use Symfony\Component\Console\Output\OutputInterface;
+use Mnobody\Scheduler\Event\ScheduledTaskSkippedEvent;
+use Mnobody\Scheduler\Event\ScheduledTaskStartedEvent;
+use Mnobody\Scheduler\Event\ScheduledTaskCompletedEvent;
 
 final class Scheduler extends Command
 {
@@ -29,18 +31,21 @@ final class Scheduler extends Command
 
     private Locker $locker;
 
+    private CommandExecutor $executor;
+
     public EventDispatcherInterface $dispatcher;
 
-    private CommandExecutor $executor;
+    private LoggerInterface $logger;
 
     private bool $eventsRan = false;
 
-    public function __construct(Schedule $schedule, Locker $locker, CommandExecutor $executor, EventDispatcherInterface $dispatcher)
+    public function __construct(Schedule $schedule, Locker $locker, CommandExecutor $executor, EventDispatcherInterface $dispatcher, LoggerInterface $logger)
     {
         $this->schedule = $schedule;
         $this->locker = $locker;
         $this->executor = $executor;
         $this->dispatcher = $dispatcher;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -76,12 +81,17 @@ final class Scheduler extends Command
                 $this->commandLockedLog($task->getCommand()->preview(), $output);
                 $this->dispatcher->dispatch(new ScheduledTaskSkippedEvent($task));
             } catch (Throwable $e) {
+                $output->writeln('Exception: ' . $e->getMessage());
                 $this->dispatcher->dispatch(new ScheduledTaskFailedEvent($task));
             }
         }
 
         if (!$this->eventsRan) {
             $output->writeln('No scheduled commands are ready to run.');
+        }
+
+        if ($output instanceof ConsoleBufferedOutput) {
+            $this->logger->info($output->fetch());
         }
 
         return ExitCode::OK;
@@ -91,7 +101,7 @@ final class Scheduler extends Command
     {
         $dateTime = date('Y-m-d H:i:s');
 
-        $output->writeln("[$dateTime] [$command]");
+        $output->writeln("[$dateTime] [$command] Running!");
     }
 
     private function commandLockedLog(string $command, OutputInterface $output)
