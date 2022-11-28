@@ -12,30 +12,21 @@ The package could be installed with composer.json:
 
 ```json
 {
+  "require": {
+    "mnobody/yii-scheduler": "@dev"
+  },
   "repositories": [
     {
       "type": "vcs",
       "url": "https://github.com/mnobody/yii-scheduler"
     }
-  ],
-  "require": {
-    "mnobody/yii-scheduler": "@dev"
-  }
+  ]
 } 
 ```
 
 ## Configuration
-example for FileMutex package
-```php
-MutexFactoryInterface::class => [
-    'class' => FileMutexFactory::class,
-    '__construct()' => [
-        'mutexPath' => 'runtime/lock',
-    ],
-],
-```
 
-## General usage 
+### General usage
 
 Configure the command list in your project's params.php file
 
@@ -73,6 +64,66 @@ return [
 ];
 ```
 
+### Logging
+By default, logging with daily rotation of log files is enabled
+```php
+
+return [
+    
+    // ...
+    
+    'mnobody/yii-scheduler' => [
+        'config' => [ ... ],
+        'timezone' => null, // 'UTC', 'Europe/Warsaw'
+        'log' => [
+            'file-target' => [
+                'file' => '@runtime/logs/scheduler.log',
+                'levels' => [
+                    LogLevel::EMERGENCY,
+                    LogLevel::ERROR,
+                    LogLevel::WARNING,
+                    LogLevel::INFO,
+                    LogLevel::DEBUG,
+                ],
+                'dir-mode' => 0755,
+                'file-mode' => null,
+                'file-owner' => 0, // root
+                'file-group' => 0, // root
+            ],
+            'file-rotator' => [
+                'days' => 14
+            ],
+        ],
+    ],
+];
+```
+
+You can disable logging by injecting a NullLogger instance instead of the default logger
+```php
+Scheduler::class => [
+        'class' => Scheduler::class,
+        '__construct()' => [
+            'schedule' => Reference::to(Schedule::class),
+            'locker' => Reference::to(Locker::class),
+            'executor' => Reference::to(CommandExecutor::class),
+            'dispatcher' => Reference::to(EventDispatcherInterface::class),
+            'logger' => Reference::to(\Psr\Log\NullLogger::class), // if you want to disable logging
+        ],
+    ],
+```
+
+### Mutex
+
+Ex. for FileMutex package
+```php
+MutexFactoryInterface::class => [
+    'class' => FileMutexFactory::class,
+    '__construct()' => [
+        'mutexPath' => 'runtime/lock',
+    ],
+],
+```
+
 ### CRON Configuration
 Add the command below in the CRONTAB configuration
 ```text
@@ -104,14 +155,12 @@ Possible _schedule_ human-readable expressions:
 | saturdays           | sundays            | weekly                    | weekly-on:1,8:00         |
 | monthly             | monthly-on:4,15:00 | twice-monthly:1,16,13:00  | last-day-of-month:14:00  |
 | quarterly           | yearly             | yearly-on:6,1,17:00       | days:1,4,6               |
-|                     |                    |                           |                          |
 
 Also _schedule_ expressions can be combined:
 
 |                         |                   |                         |
 |-------------------------|-------------------|-------------------------|
 | daily-at:12:15;weekends | hourly;wednesdays | hourly-at:45;days:1,3,5 |
-|                         |                   |                         |
 
 ### Overlapping
 To prevent overlapping provide _withoutOverlappingTimeout_ param with a number of seconds that specifies the lock lifetime \
