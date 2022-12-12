@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mnobody\Scheduler\Expression;
 
 use DateTime;
+use Exception;
 use DateTimeZone;
 use DateTimeInterface;
 use Cron\CronExpression;
@@ -39,6 +40,9 @@ final class ExpressionHandler
         return $this->expression->isDue($date);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getNextRunDate(string|DateTimeInterface $relativeTime = 'now'): DateTime
     {
         return $this->expression->getNextRunDate($relativeTime, 0, false, $this->timezone);

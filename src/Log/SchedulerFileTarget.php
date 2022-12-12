@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mnobody\Scheduler\Log;
 
 /**
- * This class is overridden to allow for daily rotation of log files and to clean up standard message formatting.
+ * This class is overridden to allow for daily rotation of log files and to clean up the standard formatting of logger messages.
  * Original class: Yiisoft\Log\Target\File\FileTarget
  */
 

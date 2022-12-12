@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mnobody\Scheduler\Tests;
 
 use Mnobody\Scheduler\Expression\Parser;
-use Mnobody\Scheduler\Expression\Expression;
 
 final class ParserTest extends \PHPUnit\Framework\TestCase
 {
@@ -14,9 +13,7 @@ final class ParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testCorrectParsing(string $expected, string $input): void
     {
-        $result = (new Parser(new Expression))
-            ->parse($input)
-            ->expression();
+        $result = (new Parser)->parse($input);
 
         self::assertSame($expected, $result);
     }

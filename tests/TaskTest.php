@@ -20,14 +20,14 @@ final class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testDefaultTaskExpression(): void
     {
-        $task = (new Task(new Command('command-name')));
+        $task = (new Task(new Command('command-name'), '* * * * *'));
 
         $this->assertSame('* * * * *', $task->getExpression());
     }
 
     public function testWithoutOverlappingParameters(): void
     {
-        $task = (new Task(new Command('command-name')))->withoutOverlappingTimeout(60);
+        $task = (new Task(new Command('command-name'), '* * * * *'))->withoutOverlappingTimeout(60);
 
         $this->assertTrue($task->isWithoutOverlapping());
         $this->assertSame(60, $task->getTimeout());
@@ -35,7 +35,7 @@ final class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testUniqueIdGeneration(): void
     {
-        $task = (new Task(new Command('command-name')));
+        $task = (new Task(new Command('command-name'), '* * * * *'));
 
         $this->assertSame('4a78cb8d6d', $task->getUniqueId());
     }

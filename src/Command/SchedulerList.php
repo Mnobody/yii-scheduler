@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Mnobody\Scheduler\Command;
 
-use Mnobody\Scheduler\Expression\ExpressionHandler;
 use Mnobody\Scheduler\Schedule;
 use Mnobody\Scheduler\Task\Task;
 use Yiisoft\Yii\Console\ExitCode;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
+use Mnobody\Scheduler\Expression\ExpressionHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -42,7 +42,6 @@ final class SchedulerList extends Command
             'Without overlapping',
         ]);
 
-        /** @var Task $task */
         foreach ($this->schedule->getTasks() as $task) {
             $table->addRow([
                 $task->getUniqueId(),
