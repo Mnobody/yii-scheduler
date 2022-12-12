@@ -35,7 +35,7 @@ final class CommandExecutor
 
             $message = sprintf('The command terminated with an error code: %u.', $exitCode);
 
-            $output->writeln("<error>$message</error>");
+            $output->writeln(sprintf("<error>%s</error>", $message));
 
             throw new Exception($message, $exitCode);
         }

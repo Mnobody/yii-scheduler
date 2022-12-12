@@ -29,9 +29,8 @@ final class DailyFileRotator implements SchedulerFileRotatorInterface
     }
 
     /**
-     * Rotates files.
-     *
-     * @param string $file The log file for rotation.
+     * Since we have to stick with FileRotatorInterface, in this method we don't really rotate but delete old files.
+     * The "rotation" is done by specifying a file to write (@method expectedFile), and creating that file when the application tries to write to it.
      */
     public function rotateFile(string $file): void
     {
@@ -39,15 +38,10 @@ final class DailyFileRotator implements SchedulerFileRotatorInterface
     }
 
     /**
-     * Checks whether the file should be rotated.
-     *
-     * @param string $file The log file for rotation.
-     *
-     * @return bool Whether you should rotate the file.
+     * Checks whether the application should write to a new file.
      */
     public function shouldRotateFile(string $file): bool
     {
-        // on the first record written, if the log is new, we should rotate (once per day)
         return !file_exists($file);
     }
 
@@ -62,7 +56,7 @@ final class DailyFileRotator implements SchedulerFileRotatorInterface
                 $this->fileName($file),
                 $this->expectedDate
                     ? $this->expectedDate->format(self::DATE_FORMAT)
-                    : (new DateTimeImmutable())->format(self::DATE_FORMAT)
+                    : (new DateTimeImmutable)->format(self::DATE_FORMAT)
             ],
             $this->path($file) . '/' . self::FILENAME_FORMAT . '.' . $this->fileExtension($file)
         );

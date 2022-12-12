@@ -20,6 +20,9 @@ final class Configurator
         $this->parser = $parser;
     }
 
+    /**
+     * @throws SchedulerConfigException
+     */
     public function configure(array $config, Schedule $schedule): void
     {
         foreach ($config as $item) {
@@ -45,7 +48,7 @@ final class Configurator
 
     private function parse(string $schedule): string
     {
-        return $this->parser->parse($schedule)->expression();
+        return $this->parser->parse($schedule);
     }
 
     private function isRegularCronExpression(string $schedule): bool
@@ -53,14 +56,15 @@ final class Configurator
         return (bool) preg_match(self::PATTERN, $schedule);
     }
 
+    /**
+     * @throws SchedulerConfigException
+     */
     private function check(array $item): void
     {
-        if (!isset($item['schedule'])) {
-            throw new SchedulerConfigException('Parameter "schedule" is required');
-        }
-
-        if (!isset($item['command'])) {
-            throw new SchedulerConfigException('Parameter "command" is required');
+        foreach (['schedule', 'command'] as $needle) {
+            if (!isset($item[$needle])) {
+                throw new SchedulerConfigException(sprintf('Parameter "%s" is required', $needle));
+            }
         }
     }
 }

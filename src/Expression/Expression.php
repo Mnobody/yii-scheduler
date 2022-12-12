@@ -23,19 +23,7 @@ final class Expression
 
     public function __construct()
     {
-        $this->init();
-    }
-
-    private function init(): void
-    {
         $this->expression = self::INITIAL_EXPRESSION;
-    }
-
-    public function reset(): self
-    {
-        $this->init();
-
-        return $this;
     }
 
     public function expression(): string

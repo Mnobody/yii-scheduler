@@ -11,29 +11,22 @@ namespace Mnobody\Scheduler\Expression;
  */
 final class Parser
 {
-    private Expression $expression;
-
-    public function __construct(Expression $expression)
+    public function parse(string $schedule): string
     {
-        $this->expression = $expression;
-    }
-
-    public function parse(string $schedule): Expression
-    {
-        $this->expression->reset(); // keep initial value of cron expression
+        $expression = new Expression;
 
         $methods = explode(';', $schedule);
 
         foreach ($methods as $methodString) {
 
-            $this->parseSingle($methodString);
+            $this->parseSingle($methodString, $expression);
 
         }
 
-        return $this->expression;
+        return $expression->expression();
     }
 
-    private function parseSingle(string $method): void
+    private function parseSingle(string $method, Expression $expression): void
     {
         $methodString = $method;
 
@@ -48,7 +41,7 @@ final class Parser
 
         $method = $this->prepareMethod($methodString);
 
-        $this->expression->{$method}(...$parameters);
+        $expression->{$method}(...$parameters);
     }
 
     private function prepareMethod(string $method): string

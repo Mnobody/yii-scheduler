@@ -8,26 +8,20 @@ use Mnobody\Scheduler\ValueObject\Command;
 
 final class Task
 {
-    /**
-     * Timeout in seconds
-     */
+    /** Timeout in seconds */
     private const DEFAULT_TIMEOUT = 0;
 
     private Command $command;
 
-    /**
-     * The cron expression representing the task's frequency.
-     */
+    /** The cron expression representing the task's frequency. */
     private string $expression;
 
-    /**
-     * Indicates if the command should not overlap itself.
-     */
+    /** Indicates if the command should not overlap itself. */
     private bool $withoutOverlapping = false;
 
     private int $timeout = self::DEFAULT_TIMEOUT;
 
-    public function __construct(Command $command, string $expression = '* * * * *')
+    public function __construct(Command $command, string $expression)
     {
         $this->command = $command;
         $this->expression = $expression;

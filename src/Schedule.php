@@ -7,6 +7,7 @@ namespace Mnobody\Scheduler;
 use Mnobody\Scheduler\Task\Task;
 use Mnobody\Scheduler\Task\Configurator;
 use Mnobody\Scheduler\Expression\ExpressionHandler;
+use Mnobody\Scheduler\Exception\SchedulerConfigException;
 
 final class Schedule
 {
@@ -17,6 +18,9 @@ final class Schedule
     /** @var Task[]  */
     private array $tasks = [];
 
+    /**
+     * @throws SchedulerConfigException
+     */
     public function __construct(Configurator $configurator, ExpressionHandler $expressionHandler, array $config = [], string $timezone = null)
     {
         $this->expressionHandler = $expressionHandler;
@@ -38,14 +42,10 @@ final class Schedule
 
         foreach ($this->tasks as $task) {
 
-            $passes = $this->expressionHandler
-                ->setExpression($task->getExpression())
-                ->setTimezone($this->timezone)
-                ->expressionPasses();
-
-            if ($passes) {
+            if ($this->passes($task)) {
                 $list[] = $task;
             }
+
         }
 
         return $list;
@@ -59,5 +59,13 @@ final class Schedule
     public function getTimezone(): ?string
     {
         return $this->timezone;
+    }
+
+    private function passes(Task $task): bool
+    {
+        return $this->expressionHandler
+            ->setExpression($task->getExpression())
+            ->setTimezone($this->timezone)
+            ->expressionPasses();
     }
 }
